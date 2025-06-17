@@ -1,0 +1,14 @@
+{
+  "users": [
+    {
+      "id": "ravi001",
+      "password": "hashed_password_here",
+      "session": {
+        "is_logged_in": true,
+        "session_token": "random_session_token",
+        "login_time": "2025-06-17T22:55:00",
+        "expires_at": "2025-06-18T22:55:00"
+      }
+    }
+  ]
+}
