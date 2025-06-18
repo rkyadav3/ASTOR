@@ -3,7 +3,7 @@ import sys
 import subprocess
 from PyQt5.QtWidgets import QMessageBox, QVBoxLayout,QWidget,QApplication, QMainWindow, QLineEdit, QPushButton, QLabel
 from PyQt5.QtGui import QIcon, QFont
-
+from gui import session  # Assuming session.py is in the same directory
 class login(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -50,10 +50,24 @@ class login(QMainWindow):
 
         # Replace this with real authentication logic
         if username == "1" and password == "1":
+            session.saving_key()
+            session.loading_key()
+            session.session_token()
+            session.WCM_upload()
             self.close()
             subprocess.run(["python", "gui/main_window.py"])  # Open main_window
         else:
             QMessageBox.warning(self, "Login Failed", "Incorrect username or password")
+
+
+
+       
+
+
+
+
+
+
 def login_main():
     app = QApplication(sys.argv)
     window = login()
