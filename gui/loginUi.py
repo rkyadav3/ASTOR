@@ -3,7 +3,7 @@ import sys
 import subprocess
 from PyQt5.QtWidgets import QMessageBox, QVBoxLayout,QWidget,QApplication, QMainWindow, QLineEdit, QPushButton, QLabel
 from PyQt5.QtGui import QIcon, QFont
-from gui import session  # Assuming session.py is in the same directory
+from utils import session  # Assuming session.py is in the same directory
 class login(QMainWindow):
     def __init__(self):
         super().__init__()

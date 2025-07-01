@@ -1,0 +1,12 @@
+[BUG]: no found input "ASTOR"
+
+## Command Line
+C:\Users\rkyad\AppData\Local\Programs\Python\Python313\Scripts\pyarmor gen ASTOR
+
+## Environments
+Python 3.13.5
+Pyarmor 9.1.7 (trial), 000000, non-profits
+Platform windows.x86_64
+Native windows.amd64
+Home C:\Users\rkyad\.pyarmor
+

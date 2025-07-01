@@ -1,11 +1,14 @@
-﻿import sys, keyring
+﻿from ast import Lambda
+import sys, keyring
+from typing import Self
 from PyQt5.QtWidgets import (
     QMainWindow, QApplication, QWidget, QLabel,
     QHBoxLayout, QVBoxLayout, QLineEdit, QPushButton,
     QComboBox, QDateTimeEdit, QTimeEdit, QCheckBox
 )
 from PyQt5.QtGui import QIcon, QFont
-
+from core import file_manager
+from core import Dark_light_mode
 
 
 
@@ -15,23 +18,33 @@ class MainWindow(QMainWindow):
         self.setWindowTitle("A S T O R")
         self.setGeometry(700, 320, 750, 650)
         self.setWindowIcon(QIcon("assets/SmallLogo.png"))
-        self.setStyleSheet("""    border: none;
+        self.setStyleSheet("""QLineEdit{
+        border: none;
     background: transparent;
     margin: 10px 5px 10px 5px;
-background-color: white;""") 
+background-color: rgba(0, 0, 0, 0);}""") 
 
         central_widget = QWidget()
         self.setCentralWidget(central_widget)
+
+
+        self.addApplication = QPushButton("Add file to Schedule")
+        self.addApplication.clicked.connect(self.addApp)
+
+
 
         # T_0LS = Text (Level 0) Left Side
         self.T_0LS = QLabel("Choose App To Schedule", self)
         self.T_0LS.setFont(QFont("Arial", 11))
         self.T_0LS.setStyleSheet("color: #292929; background-color: white;")
+        self.T_0LS.hide()
 
         # T_0RS = Text (Level 0) Right Side
         self.T_0RS = QLabel("Choose Time", self)
         self.T_0RS.setFont(QFont("Arial", 11))
         self.T_0RS.setStyleSheet("color: #292929; background-color: white;")
+        self.T_0RS.hide()
+
 
         self.H_Box_Layout = QHBoxLayout()
         self.H_Box_Layout.addWidget(self.T_0LS)
@@ -42,6 +55,7 @@ background-color: white;""")
         # LE_0LS = Line Edit Level 0 Left Side
         self.LE_0LS = QLineEdit()
         self.LE_0LS.setPlaceholderText("Enter app URL or file path...")
+        self.LE_0LS.hide()
         self.LE_0LS.setStyleSheet("""
     QLineEdit {
         background-color: rgba(0, 0, 0, 0); /* LightBlue transparent */
@@ -65,6 +79,7 @@ background-color: white;""")
       
         # BTN_0LS = Button Level 0 Left Side
         self.BTN_0LS = QPushButton("Browse")
+        self.BTN_0LS.hide()
         self.BTN_0LS.setStyleSheet("""
              QPushButton {
                     background-color: rgba(173, 216, 230, 100); /* LightBlue with transparency */
@@ -80,7 +95,8 @@ background-color: white;""")
                     background-color: rgba(173, 216, 230, 220); /* Almost solid when clicked */
                     }
                 """)
-
+        self.BTN_0LS.clicked.connect(lambda : file_manager.getApp(self,parent=None))
+        
         
 
         # CB_0RS = ComboBox Level 0 Right Side
@@ -88,13 +104,14 @@ background-color: white;""")
         self.CB_0RS.setEditable(True)
         self.CB_0RS.lineEdit().setReadOnly(True)
         self.CB_0RS.lineEdit().setPlaceholderText("Select Time & Date...")
+        self.CB_0RS.hide()
         
         self.CB_0RS.setPlaceholderText("Select Time & Date...")
         self.CB_0RS.addItems(["At Startup", "Daily", "Custom Date & Time"])
         self.CB_0RS.currentIndexChanged.connect(self.CB_0RS_currentIndexChanged)
         self.CB_0RS.setStyleSheet("""
 QComboBox {
-    background-color: white; /* LightBlue transparent */
+    background-color: rgba(0, 0, 0, 0); /* LightBlue transparent */
     border: 2px solid #ADD8E6;
     border-radius: 15px;
     padding: 6px 35px 6px 12px; /* Add space on right for arrow */
@@ -137,7 +154,7 @@ QComboBox QAbstractItemView {
         self.picker_dt_appSchedule.hide()
         self.picker_dt_appSchedule.setStyleSheet("""
     QDateTimeEdit {
-        background-color: white; /* LightBlue, semi-transparent */
+        background-color: rgba(0, 0, 0, 0); /* LightBlue, semi-transparent */
         border: 2px solid #ADD8E6;
         border-radius: 15px;
         padding: 6px 12px;
@@ -159,7 +176,7 @@ QComboBox QAbstractItemView {
     }
 
     QDateTimeEdit:hover {
-        background-color: white;
+        background-color: rgba(0, 0, 0, 0);
     }
 
     QDateTimeEdit:focus {
@@ -215,26 +232,28 @@ QTimeEdit::down-arrow {
         self.LE_1M.setPlaceholderText("Enter app URL or file path...")
         self.LE_1M.setStyleSheet("""
     QLineEdit {
-        background-color: white; /* LightBlue transparent */
+        background-color: rgba(0, 0, 0, 0); /* LightBlue transparent */
         border: 2px solid #ADD8E6;                 /* LightBlue border */
         border-radius: 15px;                       /* Rounded corners */
-        padding: 6px 12px;
+        padding: 6px 6px;
+  
         color: black;
         font-size: 14px;
     }
 
     QLineEdit:hover {
-        background-color: white);
+        background-color: rgba(0, 0, 0, 0);
     }
 
     QLineEdit:focus {
         border: 2px solid #5dade2;                 /* Slightly deeper blue on focus */
-        background-color: white;
+        background-color: rgba(0, 0, 0, 0);
     }
 """)
 
         # BTN_0LS = Button Level 1 Mid
         self.BTN_1M = QPushButton("Choose Browser (Defualt)")
+        self.BTN_1M.clicked.connect(self.show_browser_selection)
         self.BTN_1M.setStyleSheet("""
              QPushButton {
                     background-color: rgba(173, 216, 230, 100); /* LightBlue with transparency */
@@ -250,6 +269,8 @@ QTimeEdit::down-arrow {
                     background-color: rgba(173, 216, 230, 220); /* Almost solid when clicked */
                     }
                 """)
+        self.browserCheckBox = QComboBox()
+        self.browserCheckBox.hide()
 
 
         # CB_0RS = ComboBox Level 1 Left Side
@@ -499,18 +520,18 @@ QTimeEdit::down-arrow {
         self.T_5M = QLabel("Do You Want to Display To-Do List Widgit?", self)
         self.T_5M.setFont(QFont("Arial", 11))
         self.T_5M.setStyleSheet("""
-             QPushButton {
-                    background-color: rgba(173, 216, 230, 100); /* LightBlue with transparency */
+             QLabel {
+                    background-color: white; /* LightBlue with transparency */
                     color: #0F0F0F;                             /* Text color */
                     border: 2px solid #ADD8E6;                 /* LightBlue border */
                     border-radius: 15px;                       /* Rounded corners */
                     padding: 8px 16px;                         /* Spacing */
                         }
-            QPushButton:hover {
-                    background-color: rgba(173, 216, 230, 180); /* More visible on hover */
+            QLabel:hover {
+                    background-color: white; /* More visible on hover */
                     }
                     QPushButton:pressed {
-                    background-color: rgba(173, 216, 230, 220); /* Almost solid when clicked */
+                    background-color: white; /* Almost solid when clicked */
                     }
                 """)
 
@@ -564,6 +585,7 @@ QTimeEdit::down-arrow {
 
         # Main layout
         main_layout = QVBoxLayout()
+        main_layout.addWidget(self.addApplication)
         main_layout.addLayout(self.H_Box_Layout)
         main_layout.addLayout(self.H_Box_Layout0)
     
@@ -572,6 +594,7 @@ QTimeEdit::down-arrow {
         main_layout.addWidget(self.T_1M)
         main_layout.addWidget(self.LE_1M)
         main_layout.addWidget(self.BTN_1M)
+        main_layout.addWidget(self.browserCheckBox)
         main_layout.addWidget(self.CB_1LS)
         main_layout.addWidget(self.picker_dt_webSchedule)
         main_layout.addWidget(self.picker_t_webSchedule)
@@ -620,6 +643,7 @@ QTimeEdit::down-arrow {
             self.picker_t_webSchedule.hide()
 
     def toggle_clicked(self):
+        Dark_light_mode.toggle_theme()
         if self.toggle_btn.isChecked():
             self.toggle_btn.setText("Light Mode")
             self.setStyleSheet("background-color: black; color: white;")
@@ -650,6 +674,31 @@ QTimeEdit::down-arrow {
         print("Logging out...")
         keyring.delete_password("ASTOR", "sessionID")
         self.close()
+
+    def show_browser_selection(self):
+        browsers = file_manager.get_installed_browsers()
+    
+        if browsers: 
+            #self.browserCheckBox.clear()  # Optional: clear old entries
+            for name in browsers:
+                self.browserCheckBox.addItem(name)
+
+            #self.browserSelectionWindow.show()
+            self.browserCheckBox.show()
+        else:
+            print("No supported browsers found.")
+    
+     
+    def addApp(self):
+        self.T_0LS.show()
+        self.T_0RS.show()
+        self.LE_0LS.show()
+        self.BTN_0LS.show()
+        self.CB_0RS.show()
+
+
+    def task_to_list():
+        pass
 
 def main():
     app = QApplication(sys.argv)

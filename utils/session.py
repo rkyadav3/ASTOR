@@ -1,7 +1,7 @@
 ﻿import json, uuid, keyring
 import sys
 from cryptography.fernet import Fernet
-import gui.main_window as mw
+from gui import main_window as mw
 from gui import loginUi
 
 
